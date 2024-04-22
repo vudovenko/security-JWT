@@ -22,22 +22,6 @@ public class JwtService {
 
     private static final String SECRET_KEY = "K38WZTfWhc8GA9scUTOmuhTUewpgdgMD9usj8Qk81ItmBRSTYGt6iFApr8E/zFvH";
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    /**
-     * Извлекает утверждение из токена с помощью заданного распаковщика утверждений.
-     *
-     * @param token          токен, из которого нужно извлечь утверждение
-     * @param claimsResolver распаковщик утверждений, используемый для извлечения утверждения из токена
-     * @return извлеченное утверждение
-     */
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
     /**
      * Генерирует токен для пользователя на основе информации о пользователе.
      * @param userDetails информация о пользователе
@@ -63,6 +47,10 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
     /**
@@ -95,6 +83,18 @@ public class JwtService {
      */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    /**
+     * Извлекает утверждение из токена с помощью заданного распаковщика утверждений.
+     *
+     * @param token          токен, из которого нужно извлечь утверждение
+     * @param claimsResolver распаковщик утверждений, используемый для извлечения утверждения из токена
+     * @return извлеченное утверждение
+     */
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     /**

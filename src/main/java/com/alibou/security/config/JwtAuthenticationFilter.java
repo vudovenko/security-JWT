@@ -29,9 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * Выполняет внутреннюю фильтрацию для аутентификации JWT.
      *
-     * @param request      запрос HTTP
-     * @param response     ответ HTTP
-     * @param filterChain  цепочка фильтров
+     * @param request     запрос HTTP
+     * @param response    ответ HTTP
+     * @param filterChain цепочка фильтров
      * @throws ServletException если происходит ошибка сервлета
      * @throws IOException      если происходит ошибка ввода-вывода
      */
