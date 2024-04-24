@@ -41,12 +41,12 @@ public class SecurityConfiguration {
                 .hasAnyAuthority("USER")
                 .requestMatchers("/api/v1/demo-controller/**")
                 .permitAll()
-                .and()/*.formLogin(form -> form
-                        .loginPage("/api/v1/auth2/authenticate")
-                        .failureUrl("/api/v1/auth2/authenticate"))*/
+                .and().formLogin(form -> form
+                        .loginPage("/api/v1/auth2/login-page")
+                        .failureUrl("/api/v1/auth2/login-page"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/api/v1/auth2/authenticate")
+                        .logoutSuccessUrl("/api/v1/auth2/login-page")
                         .deleteCookies("token"))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

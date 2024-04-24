@@ -5,13 +5,17 @@
     <title>Spring Security</title>
 </head>
 <body>
-<form th:action="@{/api/v1/auth2/authenticate}" method="post" th:object="${authenticationRequest}">
+<form th:action="@{/api/v1/auth2/register}" method="post" th:object="${registrationForm}">
+    <div><label> Имя: <input type="text" name="имя"
+                                th:field="*{firstname}"/> </label></div>
+    <div><label> Фамилия: <input type="text" name="фамилия"
+                                 th:field="*{lastname}"/> </label></div>
     <div><label> Почта: <input type="text" name="почта"
                                th:field="*{email}"/> </label></div>
     <div><label> Пароль: <input type="password" name="пароль"
                                 th:field="*{password}"/> </label></div>
     <div><input type="submit" value="Зарегистрироваться"/></div>
 </form>
-<a th:href="@{/api/v1/auth2/register}">Вернуться на страницу регистрации</a>
+<a th:href="@{/api/v1/auth2/login-page}">Вернуться на страницу входа</a>
 </body>
 </html>

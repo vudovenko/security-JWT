@@ -14,23 +14,23 @@ public class AuthenticationController2 {
 
     private final AuthenticationService service;
 
-    @GetMapping("/register")
+    @GetMapping("/signup-page")
     public String registration(Model model) {
         model.addAttribute("registrationForm", new RegisterRequest());
-        return "/registration";
+        return "singup_page";
     }
 
     @PostMapping("/register")
     public String registration(RegisterRequest request, Model model) {
         service.register(request);
         model.addAttribute("authenticationRequest", new AuthenticationRequest());
-        return "redirect:/api/v1/auth2/authenticate";
+        return "redirect:/api/v1/auth2/login-page";
     }
 
-    @GetMapping("/authenticate")
-    public String authenticate(HttpServletResponse httpServletResponse, Model model) {
+    @GetMapping("/login-page")
+    public String getLoginPage(HttpServletResponse httpServletResponse, Model model) {
         model.addAttribute("authenticationRequest", new AuthenticationRequest());
-        return "/authentication";
+        return "login_page";
     }
 
     @PostMapping("/authenticate")
