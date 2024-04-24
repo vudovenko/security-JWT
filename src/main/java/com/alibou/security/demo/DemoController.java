@@ -15,4 +15,9 @@ public class DemoController {
     return ResponseEntity.ok("Hello from secured endpoint");
   }
 
+  @GetMapping("/with-auth")
+  public ResponseEntity<String> sayHelloWithAuth() {
+    return ResponseEntity.ok("Hello from secured endpoint with AUTH");
+  }
+
 }

@@ -3,12 +3,10 @@ package com.alibou.security.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +18,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "K38WZTfWhc8GA9scUTOmuhTUewpgdgMD9usj8Qk81ItmBRSTYGt6iFApr8E/zFvH";
+    @Value("${auth.secret}")
+    private String SECRET_KEY;
 
     /**
      * Генерирует токен для пользователя на основе информации о пользователе.
@@ -44,8 +43,8 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
@@ -71,7 +70,7 @@ public class JwtService {
      * @param token Токен для проверки
      * @return Истина, если токен истек, ложь в противном случае
      */
-    private boolean isTokenExpired(String token) {
+    private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -105,21 +104,9 @@ public class JwtService {
      */
     private Claims extractAllClaims(String token) {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
+                .parser()
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    /**
-     * Метод получения ключа, который используется для цифровой подписи JWT для проверки,
-     * что отправитель тот, за кого себя выдает, и что сообщение не было изменено при доставке.
-     *
-     * @return секретный ключ
-     */
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

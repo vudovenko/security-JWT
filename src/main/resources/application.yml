@@ -13,3 +13,9 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+auth.secret: "K38WZTfWhc8GA9scUTOmuhTUewpgdgMD9usj8Qk81ItmBRSTYGt6iFApr8E/zFvH"
+server:
+  servlet:
+    session:
+      tracking-modes: cookie

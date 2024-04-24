@@ -35,15 +35,22 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**", "/api/v1/auth2/**")
                 .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .requestMatchers("/api/v1/demo-controller/with-auth", "/api/v1/index-controller/**")
+                .hasAnyAuthority("USER")
+                .requestMatchers("/api/v1/demo-controller/**")
+                .permitAll()
+                .and()/*.formLogin(form -> form
+                        .loginPage("/api/v1/auth2/authenticate")
+                        .failureUrl("/api/v1/auth2/authenticate"))*/
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/api/v1/auth2/authenticate")
+                        .deleteCookies("token"))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }

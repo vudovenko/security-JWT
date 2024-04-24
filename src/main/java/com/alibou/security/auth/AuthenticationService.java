@@ -2,7 +2,7 @@ package com.alibou.security.auth;
 
 import com.alibou.security.config.JwtService;
 import com.alibou.security.user.Role;
-import com.alibou.security.user.User;
+import com.alibou.security.user.SecurityUser;
 import com.alibou.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +28,7 @@ public class AuthenticationService {
      */
     public AuthenticationResponse register(RegisterRequest request) {
         // Создание нового пользователя на основе данных из запроса
-        User user = User.builder()
+        SecurityUser securityUser = SecurityUser.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
@@ -37,10 +37,10 @@ public class AuthenticationService {
                 .build();
 
         // Сохранение нового пользователя в репозитории
-        User savedUser = repository.save(user);
+        SecurityUser savedSecurityUser = repository.save(securityUser);
 
         // Генерация JWT токена для пользователя
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(securityUser);
 
         // Возвращение объекта ответа со сгенерированным JWT токеном
         return AuthenticationResponse.builder()
@@ -67,11 +67,11 @@ public class AuthenticationService {
         );
 
         // Поиск пользователя по email в репозитории
-        User user = repository.findByEmail(request.getEmail())
+        SecurityUser securityUser = repository.findByEmail(request.getEmail())
                 .orElseThrow();
 
         // Генерация JWT токена для пользователя
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(securityUser);
 
         // Возвращение объекта ответа со сгенерированным JWT токеном
         return AuthenticationResponse.builder()
